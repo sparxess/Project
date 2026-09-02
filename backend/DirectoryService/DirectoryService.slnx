@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="src/DirectoryService.Api/DirectoryService.Api.csproj" />
+  <Project Path="src/DirectoryService.Application/DirectoryService.Application.csproj" />
+  <Project Path="src/DirectoryService.Contracts/DirectoryService.Contracts.csproj" />
+  <Project Path="src/DirectoryService.Domain/DirectoryService.Domain.csproj" />
+  <Project Path="src/DirectoryService.Infrastructure.Postgres/DirectoryService.Infrastructure.Postgres.csproj" />
+</Solution>
