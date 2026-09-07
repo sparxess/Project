@@ -1,6 +1,11 @@
+using DirectoryService.Infrastructure.Postgres;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<DirectoryServiceDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DirectoryService")));
 
 builder.Services.AddOpenApi();
 

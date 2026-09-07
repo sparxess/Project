@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+    <PropertyGroup>
+      <UserSecretsId>DirectoryService_a12917ab-11ab-42c5-8d9a-01245889e8cb</UserSecretsId>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Scalar.AspNetCore"/>
