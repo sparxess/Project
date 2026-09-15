@@ -4,8 +4,11 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("DirectoryService");
+
 builder.Services.AddDbContext<DirectoryServiceDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DirectoryService")));
+    options.UseNpgsql(connectionString)
+        .UseSnakeCaseNamingConvention());
 
 builder.Services.AddOpenApi();
 

@@ -5,6 +5,9 @@ namespace DirectoryService.Domain.Departments;
 
 public class Department
 {
+    // EF Core
+    private Department() { }
+    
     private Department(Guid id, Name name, Slug slug, DepartmentPath path, Guid? parentId)
     {
         Id = id;
@@ -17,9 +20,9 @@ public class Department
     }
 
     public Guid Id { get; }
-    public Name Name { get; private set; }
-    public Slug Slug { get; private set; }
-    public DepartmentPath Path { get; private set; }
+    public Name Name { get; private set; } = null!;
+    public Slug Slug { get; private set; } = null!;
+    public DepartmentPath Path { get; private set; } = null!;
     public Guid? ParentId { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
