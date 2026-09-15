@@ -5,6 +5,9 @@ namespace DirectoryService.Domain.Positions;
 
 public class Position
 {
+    // EF Core
+    private Position() { }
+    
     private Position(Guid id, Name name)
     {
         Id = id;
@@ -14,7 +17,7 @@ public class Position
     }
     
     public Guid Id { get; }
-    public Name Name { get; private set; }
+    public Name Name { get; private set; } = null!;
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
 

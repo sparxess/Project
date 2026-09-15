@@ -1,0 +1,5 @@
+root = true
+
+# Подавляем анализаторы для сгенерированного кода миграций EF Core
+[**/Migrations/**.cs]
+generated_code = true
