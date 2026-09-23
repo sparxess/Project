@@ -3,3 +3,7 @@ root = true
 # Подавляем анализаторы для сгенерированного кода миграций EF Core
 [**/Migrations/**.cs]
 generated_code = true
+
+# Контроллеры ASP.NET должны быть public — CA1515 не применимо
+[**/DirectoryService.Api/**/*.cs]
+dotnet_diagnostic.CA1515.severity = none
