@@ -22,5 +22,9 @@ public class CreateLocationValidator : AbstractValidator<CreateLocationDto>
         RuleFor(x => x.House)
             .NotEmpty().WithMessage("Номер дома не может быть пустым.")
             .MaximumLength(20).WithMessage("Номер дома не может превышать 20 символов.");
+
+        RuleFor(x => x.Apartment)
+            .MaximumLength(20).WithMessage("Номер квартиры не может превышать 20 символов.")
+            .When(x => x.Apartment is not null);
     }
 }
