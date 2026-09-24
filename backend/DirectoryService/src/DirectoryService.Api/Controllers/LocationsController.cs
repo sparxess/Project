@@ -1,3 +1,4 @@
+using DirectoryService.Application.Locations;
 using DirectoryService.Contracts.Locations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -5,14 +6,15 @@ namespace DirectoryService.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class LocationsController : ControllerBase
+public class LocationsController(ILocationsService locationsService) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateAsync(
         [FromBody] CreateLocationDto input,
         CancellationToken cancellationToken = default)
     {
-        return Ok();
+        var locationId = await locationsService.CreateAsync(input, cancellationToken);
+        return Ok(locationId);
     }
 
     [HttpGet("{locationId:guid}")]
