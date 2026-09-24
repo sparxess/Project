@@ -1,3 +1,4 @@
+using DirectoryService.Api;
 using DirectoryService.Infrastructure.Postgres;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -10,10 +11,7 @@ builder.Services.AddDbContext<DirectoryServiceDbContext>(options =>
     options.UseNpgsql(connectionString)
         .UseSnakeCaseNamingConvention());
 
-builder.Services.AddOpenApi();
-
-builder.Services.AddControllers();
-builder.Services.AddHealthChecks();
+builder.Services.AddProgramServices();
 
 var app = builder.Build();
 
