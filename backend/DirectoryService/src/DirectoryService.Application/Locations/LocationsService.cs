@@ -5,7 +5,7 @@ using FluentValidation;
 namespace DirectoryService.Application.Locations;
 
 public class LocationsService(
-    ILocationRepository repository,
+    ILocationsRepository repository,
     CreateLocationValidator validator) : ILocationsService
 {
     public async Task<Guid> CreateAsync(

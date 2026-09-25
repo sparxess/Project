@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
       <ProjectReference Include="..\DirectoryService.Application\DirectoryService.Application.csproj" />
@@ -6,6 +6,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Dapper" />
+      <PackageReference Include="EFCore.NamingConventions" />
+      <PackageReference Include="Npgsql.DependencyInjection" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     </ItemGroup>
 

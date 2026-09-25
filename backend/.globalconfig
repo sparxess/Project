@@ -45,6 +45,15 @@ dotnet_diagnostic.MA0009.severity = none
 # CA1308: ToLowerInvariant — допустимо для slug, где нижний регистр является бизнес-правилом
 dotnet_diagnostic.CA1308.severity = none
 
+# CA1848: LoggerMessage делегаты — стандартный LogError достаточен, аллокации не критичны
+dotnet_diagnostic.CA1848.severity = none
+
+# CA1031: перехват базового Exception — допустимо в catch-блоках с логированием до появления middleware
+dotnet_diagnostic.CA1031.severity = none
+
+# S2139: логирование + rethrow — намеренно, до появления exception middleware
+dotnet_diagnostic.S2139.severity = none
+
 # Правила строже, чем по умолчанию:
 dotnet_diagnostic.S1125.severity = error  # Redundant Boolean literal
 dotnet_diagnostic.S6673.severity = error  # Serilog template placeholder order

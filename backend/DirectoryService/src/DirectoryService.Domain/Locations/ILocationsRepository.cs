@@ -1,6 +1,6 @@
 namespace DirectoryService.Domain.Locations;
 
-public interface ILocationRepository
+public interface ILocationsRepository
 {
     Task<bool> ExistsWithNameAsync(
         string name,
