@@ -1,4 +1,6 @@
+using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
+using DirectoryService.Infrastructure.Postgres.Departments;
 using DirectoryService.Infrastructure.Postgres.Locations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,15 +22,19 @@ public static class InfrastructureModule
 
         services.AddNpgsqlDataSource(connectionString!);
 
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
         var repositoryImplementation = configuration["Infrastructure:LocationsRepository"];
 
         if (string.Equals(repositoryImplementation, "Dapper", StringComparison.OrdinalIgnoreCase))
         {
             services.AddScoped<ILocationsRepository, NpgsqlLocationsRepository>();
+            services.AddScoped<IDepartmentsRepository, NpgsqlDepartmentsRepository>();
         }
         else
         {
             services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
+            services.AddScoped<IDepartmentsRepository, EFCoreDepartmentsRepository>();
         }
         
         return services;

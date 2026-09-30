@@ -54,6 +54,9 @@ dotnet_diagnostic.CA1031.severity = none
 # S2139: логирование + rethrow — намеренно, до появления exception middleware
 dotnet_diagnostic.S2139.severity = none
 
+# S3459: неинициализированные auto-property — ложные срабатывания на Dapper row-классах (Dapper заполняет через рефлексию)
+dotnet_diagnostic.S3459.severity = none
+
 # Правила строже, чем по умолчанию:
 dotnet_diagnostic.S1125.severity = error  # Redundant Boolean literal
 dotnet_diagnostic.S6673.severity = error  # Serilog template placeholder order

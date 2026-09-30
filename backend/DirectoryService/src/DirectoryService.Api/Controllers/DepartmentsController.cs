@@ -1,3 +1,4 @@
+using DirectoryService.Application.Departments;
 using DirectoryService.Contracts.Departments;
 using Microsoft.AspNetCore.Mvc;
 
@@ -5,14 +6,15 @@ namespace DirectoryService.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class DepartmentsController : ControllerBase
+public class DepartmentsController(IDepartmentsService departmentsService) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateAsync(
         [FromBody] CreateDepartmentDto input,
         CancellationToken cancellationToken = default)
     {
-        return Ok();
+        var departmentId = await departmentsService.CreateAsync(input, cancellationToken);
+        return Ok(departmentId);
     }
 
     [HttpGet("{departmentId:guid}")]

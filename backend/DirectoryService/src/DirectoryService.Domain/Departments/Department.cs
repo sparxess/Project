@@ -7,16 +7,23 @@ public class Department
 {
     // EF Core
     private Department() { }
-    
-    private Department(Guid id, Name name, Slug slug, DepartmentPath path, Guid? parentId)
+
+    private Department(
+        Guid id,
+        Name name,
+        Slug slug,
+        DepartmentPath path,
+        Guid? parentId,
+        DateTimeOffset createdAt,
+        DateTimeOffset updatedAt)
     {
         Id = id;
         Name = name;
         Slug = slug;
         Path = path;
         ParentId = parentId;
-        CreatedAt = DateTimeOffset.UtcNow;
-        UpdatedAt = DateTimeOffset.UtcNow;
+        CreatedAt = createdAt;
+        UpdatedAt = updatedAt;
     }
 
     public Guid Id { get; }
@@ -38,7 +45,7 @@ public class Department
         {
             return Error.Validation("Department.InvalidId", "Id cannot be empty");
         }
-        
+
         if (parentId == Guid.Empty)
         {
             return Error.Validation("Department.InvalidParentId", "ParentId cannot be an empty Guid");
@@ -60,6 +67,26 @@ public class Department
             ? DepartmentPath.CreateForRoot(slugResult.Value)
             : DepartmentPath.Append(DepartmentPath.FromRaw(parentPath), slugResult.Value);
 
-        return new Department(id, nameResult.Value, slugResult.Value, path, parentId);
+        var now = DateTimeOffset.UtcNow;
+        return new Department(id, nameResult.Value, slugResult.Value, path, parentId, now, now);
+    }
+
+    public static Department Restore(
+        Guid id,
+        string name,
+        string slug,
+        string path,
+        Guid? parentId,
+        DateTimeOffset createdAt,
+        DateTimeOffset updatedAt)
+    {
+        return new Department(
+            id,
+            Name.Create(name).Value,
+            Slug.Create(slug).Value,
+            DepartmentPath.FromRaw(path),
+            parentId,
+            createdAt,
+            updatedAt);
     }
 }
