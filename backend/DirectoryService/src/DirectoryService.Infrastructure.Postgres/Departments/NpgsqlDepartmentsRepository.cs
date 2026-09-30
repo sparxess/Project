@@ -108,20 +108,21 @@ public class NpgsqlDepartmentsRepository(
             await connection.ExecuteAsync(
                 new CommandDefinition(departmentAddSql, departmentAddParameters, transaction, cancellationToken: cancellationToken));
 
-            var locationAddSql = """
-                                 INSERT INTO department_locations (id, department_id, location_id, is_primary)
-                                 VALUES (@Id, @DepartmentId, @LocationId, @IsPrimary)
-                                 """;
-
-            foreach (var location in locations)
+            if (locations.Count > 0)
             {
-                var locationParameters = new
+                var locationAddSql = """
+                                     INSERT INTO department_locations (id, department_id, location_id, is_primary)
+                                     VALUES (@Id, @DepartmentId, @LocationId, @IsPrimary)
+                                     """;
+
+                var locationParameters = locations.Select(location => new
                 {
                     Id = location.Id,
                     DepartmentId = location.DepartmentId,
                     LocationId = location.LocationId,
                     IsPrimary = location.IsPrimary
-                };
+                });
+
                 await connection.ExecuteAsync(
                     new CommandDefinition(locationAddSql, locationParameters, transaction,
                         cancellationToken: cancellationToken));

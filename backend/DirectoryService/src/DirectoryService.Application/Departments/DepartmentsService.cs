@@ -1,11 +1,13 @@
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.Departments;
+using DirectoryService.Domain.Locations;
 using FluentValidation;
 
 namespace DirectoryService.Application.Departments;
 
 public class DepartmentsService(
     IDepartmentsRepository repository,
+    ILocationsRepository locationsRepository,
     CreateDepartmentValidator validator) : IDepartmentsService
 {
     public async Task<Guid> CreateAsync(
@@ -45,6 +47,15 @@ public class DepartmentsService(
             throw new InvalidOperationException(department.FirstError.Description);
         }
         
+        if (departmentDto.LocationIds.Count > 0)
+        {
+            var allExist = await locationsRepository.AllExistAsync(departmentDto.LocationIds, cancellationToken);
+            if (!allExist)
+            {
+                throw new InvalidOperationException("Одна или несколько указанных локаций не существуют.");
+            }
+        }
+
         var locations = departmentDto.LocationIds.Select(locationId =>
         {
             var id = Guid.NewGuid();
