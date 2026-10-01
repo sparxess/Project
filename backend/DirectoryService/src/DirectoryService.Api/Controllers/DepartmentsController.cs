@@ -32,12 +32,13 @@ public class DepartmentsController(IDepartmentsService departmentsService) : Con
         return Ok(Array.Empty<object>());
     }
 
-    [HttpPut("{departmentId:guid}")]
+    [HttpPatch("{departmentId:guid}")]
     public async Task<IActionResult> UpdateAsync(
         [FromRoute] Guid departmentId,
         [FromBody] UpdateDepartmentDto input,
         CancellationToken cancellationToken = default)
     {
+        await departmentsService.UpdateAsync(departmentId, input, cancellationToken);
         return Ok();
     }
 
@@ -46,6 +47,26 @@ public class DepartmentsController(IDepartmentsService departmentsService) : Con
         [FromRoute] Guid departmentId,
         CancellationToken cancellationToken = default)
     {
+        return Ok();
+    }
+
+    [HttpPost("{departmentId:guid}/locations/{locationId:guid}")]
+    public async Task<IActionResult> AddLocationAsync(
+        [FromRoute] Guid departmentId,
+        [FromRoute] Guid locationId,
+        CancellationToken cancellationToken = default)
+    {
+        await departmentsService.AddLocationAsync(departmentId, locationId, cancellationToken);
+        return Ok();
+    }
+
+    [HttpDelete("{departmentId:guid}/locations/{locationId:guid}")]
+    public async Task<IActionResult> RemoveLocationAsync(
+        [FromRoute] Guid departmentId,
+        [FromRoute] Guid locationId,
+        CancellationToken cancellationToken = default)
+    {
+        await departmentsService.RemoveLocationAsync(departmentId, locationId, cancellationToken);
         return Ok();
     }
 }

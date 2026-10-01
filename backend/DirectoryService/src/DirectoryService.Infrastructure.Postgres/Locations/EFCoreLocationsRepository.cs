@@ -45,4 +45,21 @@ public class EfCoreLocationsRepository(
             throw;
         }
     }
+
+    public async Task<Location?> FindByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await dbContext.Locations
+            .FirstOrDefaultAsync(location => location.Id == id, cancellationToken);
+        
+        return result;
+    }
+
+    public async Task UpdateAsync(
+        Location location,
+        CancellationToken cancellationToken = default)
+    {
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

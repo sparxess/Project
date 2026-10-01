@@ -32,12 +32,13 @@ public class LocationsController(ILocationsService locationsService) : Controlle
         return Ok(Array.Empty<object>());
     }
 
-    [HttpPut("{locationId:guid}")]
+    [HttpPatch("{locationId:guid}")]
     public async Task<IActionResult> UpdateAsync(
         [FromRoute] Guid locationId,
         [FromBody] UpdateLocationDto input,
         CancellationToken cancellationToken = default)
     {
+        await locationsService.UpdateAsync(locationId, input, cancellationToken);
         return Ok();
     }
     
