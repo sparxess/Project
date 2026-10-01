@@ -89,4 +89,25 @@ public class Department
             createdAt,
             updatedAt);
     }
+
+    public ErrorOr<Updated> Update(string name, string slug)
+    {
+        var nameResult = Name.Create(name);
+        if (nameResult.IsError)
+        {
+            return nameResult.Errors;
+        }
+
+        var slugResult = Slug.Create(slug);
+        if (slugResult.IsError)
+        {
+            return slugResult.Errors;
+        }
+
+        Name = nameResult.Value;
+        Slug = slugResult.Value;
+        UpdatedAt = DateTimeOffset.UtcNow;
+        
+        return Result.Updated;
+    }
 }
