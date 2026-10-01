@@ -18,6 +18,18 @@ public class EfCoreLocationsRepository(
         return nameExists;
     }
 
+    public async Task<bool> AllExistAsync(
+        IEnumerable<Guid> locationIds,
+        CancellationToken cancellationToken = default)
+    {
+        var distinctIds = locationIds.Distinct().ToList();
+
+        var count = await dbContext.Locations
+            .CountAsync(location => distinctIds.Contains(location.Id), cancellationToken);
+
+        return count == distinctIds.Count;
+    }
+
     public async Task AddAsync(
         Location location,
         CancellationToken cancellationToken = default)

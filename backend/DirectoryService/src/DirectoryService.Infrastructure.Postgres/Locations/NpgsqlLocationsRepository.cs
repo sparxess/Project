@@ -29,6 +29,26 @@ public class NpgsqlLocationsRepository(
         return result;
     }
 
+    public async Task<bool> AllExistAsync(
+        IEnumerable<Guid> locationIds,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+
+        var distinctIds = locationIds.Distinct().ToArray();
+
+        const string locationExistCountSql = """
+                           SELECT COUNT(*) FROM locations WHERE id = ANY(@Ids)
+                           """;
+
+        var locationExistCountParameters = new { Ids = distinctIds };
+        
+        var count = await connection.ExecuteScalarAsync<int>(
+            new CommandDefinition(locationExistCountSql, locationExistCountParameters , cancellationToken: cancellationToken));
+
+        return count == distinctIds.Length;
+    }
+
     public async Task AddAsync(
         Location location,
         CancellationToken cancellationToken = default)
