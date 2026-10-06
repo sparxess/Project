@@ -48,6 +48,13 @@ dotnet_diagnostic.CA1308.severity = none
 # CA1848: LoggerMessage делегаты — стандартный LogError достаточен, аллокации не критичны
 dotnet_diagnostic.CA1848.severity = none
 
+# CA1716: зарезервированные слова в именах — Shared намеренное имя проекта
+dotnet_diagnostic.CA1716.severity = none
+
+# CA1032, RCS1194: кастомные исключения намеренно имеют только доменные конструкторы
+dotnet_diagnostic.CA1032.severity = none
+dotnet_diagnostic.RCS1194.severity = none
+
 # CA1031: перехват базового Exception — допустимо в catch-блоках с логированием до появления middleware
 dotnet_diagnostic.CA1031.severity = none
 

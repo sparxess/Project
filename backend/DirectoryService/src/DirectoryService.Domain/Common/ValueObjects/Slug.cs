@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using ErrorOr;
 
 namespace DirectoryService.Domain.Common.ValueObjects;
@@ -17,7 +17,9 @@ public sealed record Slug
 
         if (!ValidSlug.IsMatch(normalized))
         {
-            return Error.Validation("Slug.Invalid", "Slug must contain only lowercase letters, digits, and hyphens (1–100 characters)");
+            return Error.Validation(
+                "slug.invalid",
+                "Slug может содержать только строчные буквы, цифры и дефисы (1–100 символов)");
         }
 
         return new Slug(normalized);
