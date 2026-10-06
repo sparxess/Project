@@ -1,4 +1,4 @@
-using ErrorOr;
+﻿using ErrorOr;
 
 namespace DirectoryService.Domain.Common.ValueObjects;
 
@@ -12,7 +12,9 @@ public sealed record Address
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return Error.Validation("Address.Empty",  "Address cannot be empty");
+            return Error.Validation(
+                "address.empty",
+                "Адрес не может быть пустым.");
         }
 
         return new Address(value);

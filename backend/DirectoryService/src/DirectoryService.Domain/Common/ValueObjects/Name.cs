@@ -1,4 +1,4 @@
-using ErrorOr;
+﻿using ErrorOr;
 
 namespace DirectoryService.Domain.Common.ValueObjects;
 
@@ -14,7 +14,9 @@ public sealed record Name
 
         if (string.IsNullOrEmpty(trimmedValue))
         {
-            return Error.Validation("Name.Empty", "Name cannot be empty");
+            return Error.Validation(
+                "name.empty",
+                "Наименование не может быть пустым.");
         }
 
         return new Name(trimmedValue);

@@ -1,4 +1,4 @@
-using DirectoryService.Domain.Common.ValueObjects;
+﻿using DirectoryService.Domain.Common.ValueObjects;
 using ErrorOr;
 
 namespace DirectoryService.Domain.Departments;
@@ -43,12 +43,16 @@ public class Department
     {
         if (id == Guid.Empty)
         {
-            return Error.Validation("Department.InvalidId", "Id cannot be empty");
+            return Error.Validation(
+                "department.invalid_id",
+                "Id не может быть пустым.");
         }
 
         if (parentId == Guid.Empty)
         {
-            return Error.Validation("Department.InvalidParentId", "ParentId cannot be an empty Guid");
+            return Error.Validation(
+                "department.invalid_parent_id",
+                "ParentId не может быть пустым.");
         }
 
         var nameResult = Name.Create(name);

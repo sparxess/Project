@@ -8,23 +8,41 @@ public class CreateLocationValidator : AbstractValidator<CreateLocationDto>
     public CreateLocationValidator()
     {
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("Наименование локации не может быть пустым.")
-            .MaximumLength(200).WithMessage("Наименование локации не может превышать 200 символов.");
+            .NotEmpty()
+                .WithErrorCode("location.name.empty")
+                .WithMessage("Наименование локации не может быть пустым.")
+            .MaximumLength(200)
+                .WithErrorCode("location.name.too_long")
+                .WithMessage("Наименование локации не может превышать 200 символов.");
 
         RuleFor(x => x.City)
-            .NotEmpty().WithMessage("Город не может быть пустым.")
-            .MaximumLength(100).WithMessage("Город не может превышать 100 символов.");
+            .NotEmpty()
+                .WithErrorCode("location.city.empty")
+                .WithMessage("Город не может быть пустым.")
+            .MaximumLength(100)
+                .WithErrorCode("location.city.too_long")
+                .WithMessage("Город не может превышать 100 символов.");
 
         RuleFor(x => x.Street)
-            .NotEmpty().WithMessage("Улица не может быть пустой.")
-            .MaximumLength(200).WithMessage("Улица не может превышать 200 символов.");
+            .NotEmpty()
+                .WithErrorCode("location.street.empty")
+                .WithMessage("Улица не может быть пустой.")
+            .MaximumLength(200)
+                .WithErrorCode("location.street.too_long")
+                .WithMessage("Улица не может превышать 200 символов.");
 
         RuleFor(x => x.House)
-            .NotEmpty().WithMessage("Номер дома не может быть пустым.")
-            .MaximumLength(20).WithMessage("Номер дома не может превышать 20 символов.");
+            .NotEmpty()
+                .WithErrorCode("location.house.empty")
+                .WithMessage("Номер дома не может быть пустым.")
+            .MaximumLength(20)
+                .WithErrorCode("location.house.too_long")
+                .WithMessage("Номер дома не может превышать 20 символов.");
 
         RuleFor(x => x.Apartment)
-            .MaximumLength(20).WithMessage("Номер квартиры не может превышать 20 символов.")
+            .MaximumLength(20)
+                .WithErrorCode("location.apartment.too_long")
+                .WithMessage("Номер квартиры не может превышать 20 символов.")
             .When(x => x.Apartment is not null);
     }
 }
