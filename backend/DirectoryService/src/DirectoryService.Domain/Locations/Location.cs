@@ -1,4 +1,4 @@
-using DirectoryService.Domain.Common.ValueObjects;
+﻿using DirectoryService.Domain.Common.ValueObjects;
 using ErrorOr;
 
 namespace DirectoryService.Domain.Locations;
@@ -27,7 +27,9 @@ public class Location
     {
         if (id == Guid.Empty)
         {
-            return Error.Validation("Location.InvalidId", "Id cannot be empty");
+            return Error.Validation(
+                "location.invalid_id",
+                "Id не может быть пустым.");
         }
         
         var nameResult = Name.Create(name);

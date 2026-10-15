@@ -1,4 +1,4 @@
-using ErrorOr;
+﻿using ErrorOr;
 
 namespace DirectoryService.Domain.Departments;
 
@@ -24,17 +24,23 @@ public class DepartmentLocation
     {
         if (id == Guid.Empty)
         {
-            return Error.Validation("DepartmentLocation.InvalidId", "Id cannot be empty");
+            return Error.Validation(
+                "department_location.invalid_id",
+                "Id не может быть пустым.");
         }
         
         if (departmentId == Guid.Empty)
         {
-            return Error.Validation("DepartmentLocation.InvalidDepartmentId", "DepartmentId cannot be empty");
+            return Error.Validation(
+                "department_location.invalid_department_id",
+                "DepartmentId не может быть пустым.");
         }
         
         if (locationId == Guid.Empty)
         {
-            return Error.Validation("DepartmentLocation.InvalidLocationId", "LocationId cannot be empty");
+            return Error.Validation(
+                "department_location.invalid_location_id",
+                "LocationId не может быть пустым.");
         }
         
         return new DepartmentLocation(id, departmentId, locationId, isPrimary);

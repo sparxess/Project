@@ -1,6 +1,9 @@
+﻿using DirectoryService.Application.Departments.Fails.Exceptions;
+using DirectoryService.Application.Extensions;
 using DirectoryService.Contracts.Departments;
 using DirectoryService.Domain.Departments;
 using DirectoryService.Domain.Locations;
+using DirectoryService.Shared;
 using FluentValidation;
 
 namespace DirectoryService.Application.Departments;
@@ -15,7 +18,11 @@ public class DepartmentsService(
         CreateDepartmentDto departmentDto,
         CancellationToken cancellationToken = default)
     {
-        await createDepartmentValidator.ValidateAndThrowAsync(departmentDto, cancellationToken);
+        var validationResult = await createDepartmentValidator.ValidateAsync(departmentDto, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            throw new DepartmentValidationException(validationResult.ToErrors());
+        }
 
         string? parentPath = null;
         if (departmentDto.ParentId != null)
@@ -23,7 +30,7 @@ public class DepartmentsService(
             var parentDepartment = await repository.FindByIdAsync(departmentDto.ParentId.Value, cancellationToken);
             if (parentDepartment == null)
             {
-                throw new InvalidOperationException($"Указанное родительское подразделение '{departmentDto.ParentId}' не найдено.");
+                throw new DepartmentParentNotFoundException(departmentDto.ParentId!.Value);
             }
 
             parentPath = parentDepartment.Path.Value;
@@ -32,7 +39,7 @@ public class DepartmentsService(
         var slugExists = await repository.ExistsWithSlugAsync(departmentDto.Slug, cancellationToken);
         if (slugExists)
         {
-            throw new InvalidOperationException($"Slug '{departmentDto.Slug}' уже занят.");
+            throw new DepartmentSlugExistsException(departmentDto.Slug);
         }
         
         var departmentId = Guid.NewGuid();
@@ -45,7 +52,10 @@ public class DepartmentsService(
 
         if (department.IsError)
         {
-            throw new InvalidOperationException(department.FirstError.Description);
+            throw new DepartmentValidationException(
+                [DomainError.Validation(
+                    department.FirstError.Code,
+                    department.FirstError.Description)]);
         }
         
         if (departmentDto.LocationIds.Count > 0)
@@ -53,7 +63,7 @@ public class DepartmentsService(
             var allExist = await locationsRepository.AllExistAsync(departmentDto.LocationIds, cancellationToken);
             if (!allExist)
             {
-                throw new InvalidOperationException("Одна или несколько указанных локаций не существуют.");
+                throw new DepartmentLocationsNotFoundException();
             }
         }
 
@@ -63,7 +73,10 @@ public class DepartmentsService(
             var location = DepartmentLocation.Create(id, department.Value.Id, locationId);
             if (location.IsError)
             {
-                throw new InvalidOperationException(location.FirstError.Description);
+                throw new DepartmentValidationException(
+                    [DomainError.Validation(
+                        location.FirstError.Code,
+                        location.FirstError.Description)]);
             }
             
             return location.Value;
@@ -79,12 +92,16 @@ public class DepartmentsService(
         UpdateDepartmentDto departmentDto,
         CancellationToken cancellationToken = default)
     {
-        await updateDepartmentValidator.ValidateAndThrowAsync(departmentDto, cancellationToken);
+        var validationResult = await updateDepartmentValidator.ValidateAsync(departmentDto, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            throw new DepartmentValidationException(validationResult.ToErrors());
+        }
         
         var department = await repository.FindByIdAsync(id, cancellationToken);
         if (department == null)
         {
-            throw new InvalidOperationException($"Подразделение с идентификатором {id} не найдено");
+            throw new DepartmentNotFoundException(id);
         }
 
         if (!string.Equals(departmentDto.Slug, department.Slug.Value, StringComparison.Ordinal))
@@ -92,14 +109,18 @@ public class DepartmentsService(
             var slugExists = await repository.ExistsWithSlugAsync(departmentDto.Slug, cancellationToken);
             if (slugExists)
             {
-                throw new InvalidOperationException($"Slug '{departmentDto.Slug}' уже занят.");
+                throw new DepartmentSlugExistsException(departmentDto.Slug);
             }
         }
         
         var updatedDepartment = department.Update(departmentDto.Name, departmentDto.Slug);
         if (updatedDepartment.IsError)
         {
-            throw new InvalidOperationException(updatedDepartment.FirstError.Description);
+            throw new DepartmentValidationException(
+                [DomainError.Validation(
+                    updatedDepartment.FirstError.Code,
+                    updatedDepartment.FirstError.Description)]);
+            
         }
         
         await repository.UpdateAsync(department, cancellationToken);
@@ -113,27 +134,30 @@ public class DepartmentsService(
         var department = await repository.FindByIdAsync(departmentId, cancellationToken);
         if (department == null)
         {
-            throw new InvalidOperationException("Указанное подразделение не существует.");
+            throw new DepartmentNotFoundException(departmentId);
         }
         
         var location = await locationsRepository.FindByIdAsync(locationId, cancellationToken);
         if (location == null)
         {
-            throw new InvalidOperationException("Указанная локация не существует.");
+            throw new DepartmentLocationNotFoundException(locationId);
         }
         
         var departmentLocationExists =
             await repository.ExistsDepartmentLocationAsync(departmentId, locationId, cancellationToken);
         if (departmentLocationExists)
         {
-            throw new InvalidOperationException("Указанная локация уже привязана к данному подразделению.");
+            throw new DepartmentLocationAlreadyExistsException(locationId);
         }
         
         var id = Guid.NewGuid();
         var departmentLocation = DepartmentLocation.Create(id, departmentId, locationId);
         if (departmentLocation.IsError)
         {
-            throw new InvalidOperationException(departmentLocation.FirstError.Description);
+            throw new DepartmentValidationException(
+                [DomainError.Validation(
+                    departmentLocation.FirstError.Code,
+                    departmentLocation.FirstError.Description)]);
         }
         
         await repository.AddDepartmentLocationAsync(departmentLocation.Value, cancellationToken);
@@ -147,7 +171,7 @@ public class DepartmentsService(
         var result = await repository.RemoveDepartmentLocationAsync(departmentId, locationId, cancellationToken);
         if (!result)
         {
-            throw new InvalidOperationException("Данная локация не привязана к указанному подразделению или не существует.");
+            throw new DepartmentLocationNotLinkedException(locationId);
         }
     }
 }
